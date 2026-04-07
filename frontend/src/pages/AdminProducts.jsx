@@ -159,24 +159,24 @@ const AdminProducts = () => {
   if (!user || (user.role && user.role.name !== 'admin')) {
     return (
       <div className="container mx-auto p-4">
-        <div className="text-red-500">Access Denied</div>
+        <div className="text-red-500">Từ chối truy cập</div>
       </div>
     );
   }
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">Admin - Manage Products</h1>
+      <h1 className="text-3xl font-bold mb-6">Admin - Quản lý sản phẩm</h1>
 
       {error && <div className="bg-red-100 text-red-700 p-3 mb-4 rounded">{error}</div>}
 
       <div className="bg-white p-6 rounded shadow-md mb-6">
-        <h2 className="text-xl font-bold mb-4">{editingId ? 'Edit Product' : 'Create Product'}</h2>
+        <h2 className="text-xl font-bold mb-4 text-black">{editingId ? 'Chỉnh sửa sản phẩm' : 'Tạo sản phẩm'}</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"
             name="name"
-            placeholder="Product Name"
+            placeholder="Tên sản phẩm"
             value={formData.name}
             onChange={handleInputChange}
             required
@@ -184,7 +184,7 @@ const AdminProducts = () => {
           />
           <textarea
             name="description"
-            placeholder="Description"
+            placeholder="Mô tả"
             value={formData.description}
             onChange={handleInputChange}
             className="w-full border border-gray-300 rounded p-2"
@@ -192,7 +192,7 @@ const AdminProducts = () => {
           <input
             type="number"
             name="price"
-            placeholder="Price"
+            placeholder="Giá"
             value={formData.price}
             onChange={handleInputChange}
             step="0.01"
@@ -206,7 +206,7 @@ const AdminProducts = () => {
             required
             className="w-full border border-gray-300 rounded p-2"
           >
-            <option value="">Select Category</option>
+            <option value="">Chọn thể loại</option>
             {categories.map((cat) => (
               <option key={cat._id} value={cat._id}>
                 {cat.name}
@@ -216,14 +216,14 @@ const AdminProducts = () => {
           <input
             type="number"
             name="stock"
-            placeholder="Stock"
+            placeholder="Số lượng tồn kho"
             value={formData.stock}
             onChange={handleInputChange}
             required
             className="w-full border border-gray-300 rounded p-2"
           />
           <div>
-            <label className="block text-sm font-medium mb-2">Product Image</label>
+            <label className="block text-sm font-medium mb-2">Hình ảnh sản phẩm</label>
             <input
               type="file"
               accept="image/*"
@@ -247,7 +247,7 @@ const AdminProducts = () => {
               disabled={loading}
               className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:opacity-50"
             >
-              {editingId ? 'Update' : 'Create'}
+              {editingId ? 'Update' : 'Tạo'}
             </button>
             {editingId && (
               <button
@@ -255,7 +255,7 @@ const AdminProducts = () => {
                 onClick={handleCancel}
                 className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
               >
-                Cancel
+                Huỷ
               </button>
             )}
           </div>
@@ -266,24 +266,24 @@ const AdminProducts = () => {
         <table className="w-full border-collapse">
           <thead className="bg-gray-200">
             <tr>
-              <th className="p-3 text-left">Name</th>
-              <th className="p-3 text-left">Category</th>
-              <th className="p-3 text-left">Price</th>
-              <th className="p-3 text-left">Stock</th>
-              <th className="p-3 text-left">Actions</th>
+              <th className="p-3 text-left">Tên</th>
+              <th className="p-3 text-left">Thể loại</th>
+              <th className="p-3 text-left">Giá</th>
+              <th className="p-3 text-left">Số lượng</th>
+              <th className="p-3 text-left">Hành động</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
                 <td colSpan="5" className="p-3 text-center">
-                  Loading...
+                  Đang tải...
                 </td>
               </tr>
             ) : products.length === 0 ? (
               <tr>
                 <td colSpan="5" className="p-3 text-center">
-                  No products found
+                  Không tìm thấy sản phẩm
                 </td>
               </tr>
             ) : (
@@ -298,13 +298,13 @@ const AdminProducts = () => {
                       onClick={() => handleEdit(product)}
                       className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
                     >
-                      Edit
+                      Chỉnh sửa
                     </button>
                     <button
                       onClick={() => handleDelete(product._id)}
                       className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
                     >
-                      Delete
+                      Xoá
                     </button>
                   </td>
                 </tr>

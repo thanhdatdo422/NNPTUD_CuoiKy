@@ -73,15 +73,15 @@ const Cart = () => {
     }
   };
 
-  if (!cart) return <div>Loading...</div>;
+  if (!cart) return <div>Đang tải...</div>;
 
   const totalAmount = cart.items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
 
   return (
     <div className="container mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Cart</h2>
+      <h2 className="text-2xl font-bold mb-4">Giỏ hàng</h2>
       {cart.items.length === 0 ? (
-        <p>Your cart is empty</p>
+        <p>Giỏ hàng đang trống</p>
       ) : (
         <div>
           {cart.items.map((item) => (
@@ -100,7 +100,7 @@ const Cart = () => {
               </div>
               <div className="flex flex-col items-end gap-2">
                 <div className="flex items-center gap-2">
-                  <label>Qty:</label>
+                  <label>SL:</label>
                   <input
                     type="number"
                     value={item.quantity}
@@ -113,43 +113,43 @@ const Cart = () => {
                   onClick={() => handleRemoveItem(item._id)}
                   className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
                 >
-                  Remove
+                  Xoá
                 </button>
               </div>
             </div>
           ))}
           <div className="mt-6">
             <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">Shipping Address:</label>
+              <label className="block text-sm font-medium mb-2">Địa chỉ giao hàng:</label>
               <textarea
                 value={shippingAddress}
                 onChange={(e) => setShippingAddress(e.target.value)}
                 className="w-full p-2 border rounded"
                 rows="3"
-                placeholder="Enter your shipping address"
+                placeholder="Nhập địa chỉ giao hàng"
               />
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">Payment Method:</label>
+              <label className="block text-sm font-medium mb-2">Phương thức thanh toán:</label>
               <select
                 value={paymentMethod}
                 onChange={(e) => setPaymentMethod(e.target.value)}
                 className="w-full p-2 border rounded"
               >
-                <option value="Cash on Delivery">Cash on Delivery</option>
-                <option value="Credit Card">Credit Card</option>
+                <option value="Cash on Delivery">Tiền mặt</option>
+                <option value="Credit Card">Thẻ tín dụng</option>
                 <option value="PayPal">PayPal</option>
               </select>
             </div>
             <div className="text-right mb-4">
-              <p className="text-xl font-bold">Total: ${totalAmount.toFixed(2)}</p>
+              <p className="text-xl font-bold">Tổng tiền: ${totalAmount.toFixed(2)}</p>
             </div>
             <div className="text-right">
               <button
                 onClick={handleCheckout}
                 className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 text-lg"
               >
-                Checkout
+                Thanh toán
               </button>
             </div>
           </div>

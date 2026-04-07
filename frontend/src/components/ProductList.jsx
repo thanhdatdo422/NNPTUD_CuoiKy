@@ -42,7 +42,7 @@ const ProductList = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Products</h2>
+      <h2 className="text-2xl font-bold mb-4">Sản phẩm</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {products.map((product) => (
           <Link key={product._id} to={`/product/${product._id}`} className="block">
@@ -60,7 +60,7 @@ const ProductList = () => {
               <h3 className="text-xl font-semibold">{product.name}</h3>
               <p className="text-gray-600 text-sm mb-2">{product.description}</p>
               <p className="text-lg font-bold text-blue-600 mb-2">${product.price}</p>
-              <p className="text-sm text-gray-500 mb-3">Stock: {product.stock}</p>
+              <p className="text-sm text-gray-500 mb-3">Còn: {product.stock}</p>
               <button
                 onClick={(e) => {
                   e.preventDefault();
@@ -68,7 +68,7 @@ const ProductList = () => {
                 }}
                 className="bg-blue-600 text-white px-4 py-2 rounded mt-2 w-full hover:bg-blue-700"
               >
-                Add to Cart
+                Thêm vào giỏ
               </button>
             </div>
           </Link>
