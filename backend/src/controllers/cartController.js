@@ -91,9 +91,29 @@ const removeFromCart = async (req, res) => {
   }
 };
 
+// @desc    Clear user cart
+// @route   DELETE /api/carts
+// @access  Private
+const clearCart = async (req, res) => {
+  try {
+    const cart = await Cart.findOne({ user: req.user._id });
+
+    if (cart) {
+      cart.items = [];
+      await cart.save();
+      res.json({ message: 'Cart cleared' });
+    } else {
+      res.status(404).json({ message: 'Cart not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getCart,
   addToCart,
   updateCartItem,
   removeFromCart,
+  clearCart,
 };

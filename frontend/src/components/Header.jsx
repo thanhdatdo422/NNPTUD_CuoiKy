@@ -27,6 +27,11 @@ const Header = () => {
           <Link to="/cart" className="hover:underline">
             Cart
           </Link>
+          {user && (
+            <Link to="/orders" className="hover:underline">
+              My Orders
+            </Link>
+          )}
           {isAdmin && (
             <>
               <Link to="/admin/products" className="hover:underline">

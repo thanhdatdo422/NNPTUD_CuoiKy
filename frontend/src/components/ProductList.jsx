@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { productService } from '../services/productService';
 import { cartService } from '../services/cartService';
 
@@ -44,29 +45,33 @@ const ProductList = () => {
       <h2 className="text-2xl font-bold mb-4">Products</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {products.map((product) => (
-          <div key={product._id} className="border p-4 rounded overflow-hidden">
-            {getProductImage(product) && (
-              <img
-                src={getImageUrl(getProductImage(product))}
-                alt={product.name}
-                className="w-full h-48 object-cover mb-3 rounded border border-gray-200"
-                onError={(e) => {
-                  e.target.src = 'https://placehold.co/400x300?text=Image+Error';
+          <Link key={product._id} to={`/product/${product._id}`} className="block">
+            <div className="border p-4 rounded overflow-hidden hover:shadow-lg transition-shadow">
+              {getProductImage(product) && (
+                <img
+                  src={getImageUrl(getProductImage(product))}
+                  alt={product.name}
+                  className="w-full h-48 object-cover mb-3 rounded border border-gray-200"
+                  onError={(e) => {
+                    e.target.src = 'https://placehold.co/400x300?text=Image+Error';
+                  }}
+                />
+              )}
+              <h3 className="text-xl font-semibold">{product.name}</h3>
+              <p className="text-gray-600 text-sm mb-2">{product.description}</p>
+              <p className="text-lg font-bold text-blue-600 mb-2">${product.price}</p>
+              <p className="text-sm text-gray-500 mb-3">Stock: {product.stock}</p>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleAddToCart(product._id);
                 }}
-              />
-            )}
-            <h3 className="text-xl font-semibold">{product.name}</h3>
-            <p className="text-gray-600 text-sm mb-2">{product.description}</p>
-            <p className="text-lg font-bold text-blue-600 mb-2">{product.image}</p>
-            <p className="text-lg font-bold text-blue-600 mb-2">${product.price}</p>
-            <p className="text-sm text-gray-500 mb-3">Stock: {product.stock}</p>
-            <button
-              onClick={() => handleAddToCart(product._id)}
-              className="bg-blue-600 text-white px-4 py-2 rounded mt-2 w-full hover:bg-blue-700"
-            >
-              Add to Cart
-            </button>
-          </div>
+                className="bg-blue-600 text-white px-4 py-2 rounded mt-2 w-full hover:bg-blue-700"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </Link>
         ))}
       </div>
     </div>

@@ -1,8 +1,13 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { cartService } from '../services/cartService';
+import { orderService } from '../services/orderService';
 
 const Cart = () => {
   const [cart, setCart] = useState(null);
+  const [shippingAddress, setShippingAddress] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('Cash on Delivery');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -38,7 +43,39 @@ const Cart = () => {
     }
   };
 
+  const handleCheckout = async () => {
+    if (!cart || cart.items.length === 0) return;
+    if (!shippingAddress.trim()) {
+      alert('Please enter shipping address');
+      return;
+    }
+
+    const totalAmount = cart.items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+    const orderItems = cart.items.map(item => ({
+      product: item.product._id,
+      quantity: item.quantity,
+      price: item.product.price,
+    }));
+
+    try {
+      const order = await orderService.createOrder({
+        orderItems,
+        shippingAddress,
+        paymentMethod,
+        totalAmount,
+      });
+      // Clear the cart after successful order
+      await cartService.clearCart();
+      // Navigate to order success page with order data
+      navigate('/order-success', { state: { order } });
+    } catch (error) {
+      console.error('Error creating order:', error);
+    }
+  };
+
   if (!cart) return <div>Loading...</div>;
+
+  const totalAmount = cart.items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
 
   return (
     <div className="container mx-auto p-4">
@@ -81,10 +118,40 @@ const Cart = () => {
               </div>
             </div>
           ))}
-          <div className="text-right mt-6">
-            <button className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 text-lg">
-              Checkout
-            </button>
+          <div className="mt-6">
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2">Shipping Address:</label>
+              <textarea
+                value={shippingAddress}
+                onChange={(e) => setShippingAddress(e.target.value)}
+                className="w-full p-2 border rounded"
+                rows="3"
+                placeholder="Enter your shipping address"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2">Payment Method:</label>
+              <select
+                value={paymentMethod}
+                onChange={(e) => setPaymentMethod(e.target.value)}
+                className="w-full p-2 border rounded"
+              >
+                <option value="Cash on Delivery">Cash on Delivery</option>
+                <option value="Credit Card">Credit Card</option>
+                <option value="PayPal">PayPal</option>
+              </select>
+            </div>
+            <div className="text-right mb-4">
+              <p className="text-xl font-bold">Total: ${totalAmount.toFixed(2)}</p>
+            </div>
+            <div className="text-right">
+              <button
+                onClick={handleCheckout}
+                className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 text-lg"
+              >
+                Checkout
+              </button>
+            </div>
           </div>
         </div>
       )}

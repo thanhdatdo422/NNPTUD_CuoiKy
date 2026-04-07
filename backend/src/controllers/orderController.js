@@ -18,7 +18,7 @@ const getOrders = async (req, res) => {
 // @access  Private
 const getMyOrders = async (req, res) => {
   try {
-    const orders = await Order.find({ user: req.user._id }).populate('items');
+    const orders = await Order.find({ user: req.user._id }).populate('items').populate('items.product');
     res.json(orders);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -30,7 +30,7 @@ const getMyOrders = async (req, res) => {
 // @access  Private
 const getOrderById = async (req, res) => {
   try {
-    const order = await Order.findById(req.params.id).populate('user').populate('items');
+    const order = await Order.findById(req.params.id).populate('user').populate('items').populate('items.product');
 
     if (order) {
       res.json(order);
@@ -54,15 +54,38 @@ const createOrder = async (req, res) => {
   }
 
   try {
+    // Create order with empty items first
     const order = new Order({
       user: req.user._id,
-      items: orderItems,
+      items: [],
       totalAmount,
       shippingAddress,
       paymentMethod,
     });
 
     const createdOrder = await order.save();
+
+    // Create OrderItems
+    const orderItemIds = [];
+    for (const item of orderItems) {
+      const orderItem = new OrderItem({
+        order: createdOrder._id,
+        product: item.product,
+        quantity: item.quantity,
+        price: item.price,
+      });
+      const savedOrderItem = await orderItem.save();
+      orderItemIds.push(savedOrderItem._id);
+    }
+
+    // Update order with orderItemIds
+    createdOrder.items = orderItemIds;
+    await createdOrder.save();
+
+    // Populate the order before returning
+    await createdOrder.populate('items');
+    await createdOrder.populate('items.product');
+
     res.status(201).json(createdOrder);
   } catch (error) {
     res.status(500).json({ message: error.message });

@@ -20,4 +20,9 @@ export const cartService = {
     const response = await api.delete(`/carts/${itemId}`);
     return response.data;
   },
+
+  clearCart: async () => {
+    const response = await api.delete('/carts');
+    return response.data;
+  },
 };
