@@ -6,7 +6,7 @@ const {
   updateProduct,
   deleteProduct,
 } = require('../controllers/productController');
-const { protect, checkPermission } = require('../middlewares/authMiddleware');
+const { protect, admin, checkPermission } = require('../middlewares/authMiddleware');
 
 const router = express.Router();
 
@@ -15,6 +15,6 @@ router
   .route('/:id')
   .get(getProductById)
   .put(protect, checkPermission('update_product'), updateProduct)
-  .delete(protect, checkPermission('delete_product'), deleteProduct);
+  .delete(protect, admin, deleteProduct);
 
 module.exports = router;

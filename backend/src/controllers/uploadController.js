@@ -4,7 +4,7 @@ const path = require('path');
 
 // Set storage engine
 const storage = multer.diskStorage({
-  destination: './uploads/',
+  destination: path.join(__dirname, '../../uploads'),
   filename: function (req, file, cb) {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
@@ -26,7 +26,7 @@ function checkFileType(file, cb) {
 // Init upload
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 1000000 }, // 1MB
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
   fileFilter: function (req, file, cb) {
     checkFileType(file, cb);
   },
@@ -38,10 +38,12 @@ const upload = multer({
 const uploadImage = (req, res) => {
   upload(req, res, async (err) => {
     if (err) {
-      res.status(400).json({ message: err });
+      console.error('Upload error:', err);
+      const message = err && err.message ? err.message : err;
+      return res.status(400).json({ message });
     } else {
       if (req.file == undefined) {
-        res.status(400).json({ message: 'No file selected' });
+        return res.status(400).json({ message: 'No file selected' });
       } else {
         const upload = new Upload({
           filename: req.file.filename,
@@ -54,6 +56,7 @@ const uploadImage = (req, res) => {
         });
 
         const createdUpload = await upload.save();
+        console.log('File uploaded to:', req.file.path);
         res.status(201).json({
           message: 'File uploaded!',
           file: `/uploads/${req.file.filename}`,

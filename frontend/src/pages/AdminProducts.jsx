@@ -81,10 +81,12 @@ const AdminProducts = () => {
       }
 
       const submitData = {
-        ...formData,
-        image: imageUrl,
+        name: formData.name,
+        description: formData.description,
         price: parseFloat(formData.price),
+        category: formData.category,
         stock: parseInt(formData.stock),
+        images: imageUrl ? [imageUrl] : [],
       };
 
       if (editingId) {
@@ -109,7 +111,7 @@ const AdminProducts = () => {
       setError('');
     } catch (err) {
       setError('Failed to save product');
-      console.error(err);
+      console.error('Save product error:', err.response?.data || err);
     } finally {
       setLoading(false);
     }
@@ -123,7 +125,7 @@ const AdminProducts = () => {
       price: product.price,
       category: product.category._id,
       stock: product.stock,
-      image: product.image,
+      image: product.images && product.images.length > 0 ? product.images[0] : product.image || '',
     });
   };
 
@@ -133,8 +135,9 @@ const AdminProducts = () => {
         await productService.deleteProduct(id);
         await fetchProducts();
       } catch (err) {
-        setError('Failed to delete product');
-        console.error(err);
+        const message = err.response?.data?.message || err.message || 'Failed to delete product';
+        setError(message);
+        console.error('Delete product error:', err.response?.data || err);
       }
     }
   };

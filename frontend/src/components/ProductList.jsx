@@ -29,10 +29,14 @@ const ProductList = () => {
   const getImageUrl = (imagePath) => {
     if (!imagePath) return 'https://placehold.co/400x300?text=No+Image';
     if (imagePath.startsWith('http')) return imagePath;
-    
-    // Đảm bảo luôn có dấu '/' ở đầu trước khi nối với localhost
+
     const formattedPath = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
     return `http://localhost:5000${formattedPath}`;
+  };
+
+  const getProductImage = (product) => {
+    if (product.images && product.images.length > 0) return product.images[0];
+    return product.image || '';
   };
 
   return (
@@ -41,16 +45,15 @@ const ProductList = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {products.map((product) => (
           <div key={product._id} className="border p-4 rounded overflow-hidden">
-            {product.image && (
+            {getProductImage(product) && (
               <img
-              src={getImageUrl(product.image)}
-              alt={product.name}
-              className="w-full h-48 object-cover mb-3 rounded border border-gray-200"
-              onError={(e) => {
-                // Đề phòng trường hợp URL đúng nhưng backend mất file
-                e.target.src = 'https://placehold.co/400x300?text=Image+Error'; 
-              }}
-            />
+                src={getImageUrl(getProductImage(product))}
+                alt={product.name}
+                className="w-full h-48 object-cover mb-3 rounded border border-gray-200"
+                onError={(e) => {
+                  e.target.src = 'https://placehold.co/400x300?text=Image+Error';
+                }}
+              />
             )}
             <h3 className="text-xl font-semibold">{product.name}</h3>
             <p className="text-gray-600 text-sm mb-2">{product.description}</p>
