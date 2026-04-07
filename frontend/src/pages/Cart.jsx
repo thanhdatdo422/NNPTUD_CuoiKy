@@ -48,30 +48,41 @@ const Cart = () => {
       ) : (
         <div>
           {cart.items.map((item) => (
-            <div key={item._id} className="border p-4 rounded mb-4 flex justify-between items-center">
-              <div>
-                <h3 className="text-xl">{item.product.name}</h3>
-                <p>${item.product.price}</p>
-              </div>
-              <div className="flex items-center">
-                <input
-                  type="number"
-                  value={item.quantity}
-                  onChange={(e) => handleUpdateQuantity(item._id, e.target.value)}
-                  className="w-16 p-2 border rounded mr-2"
-                  min="1"
+            <div key={item._id} className="border p-4 rounded mb-4 flex gap-4">
+              {item.product.image && (
+                <img
+                  src={item.product.image.startsWith('/') ? `http://localhost:5000${item.product.image}` : item.product.image}
+                  alt={item.product.name}
+                  className="w-24 h-24 object-cover rounded"
                 />
+              )}
+              <div className="flex-1">
+                <h3 className="text-xl font-semibold">{item.product.name}</h3>
+                <p className="text-gray-600 mb-2">{item.product.description}</p>
+                <p className="text-lg font-bold text-blue-600">${item.product.price}</p>
+              </div>
+              <div className="flex flex-col items-end gap-2">
+                <div className="flex items-center gap-2">
+                  <label>Qty:</label>
+                  <input
+                    type="number"
+                    value={item.quantity}
+                    onChange={(e) => handleUpdateQuantity(item._id, e.target.value)}
+                    className="w-16 p-2 border rounded"
+                    min="1"
+                  />
+                </div>
                 <button
                   onClick={() => handleRemoveItem(item._id)}
-                  className="bg-red-600 text-white px-4 py-2 rounded"
+                  className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
                 >
                   Remove
                 </button>
               </div>
             </div>
           ))}
-          <div className="text-right">
-            <button className="bg-green-600 text-white px-4 py-2 rounded">
+          <div className="text-right mt-6">
+            <button className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 text-lg">
               Checkout
             </button>
           </div>

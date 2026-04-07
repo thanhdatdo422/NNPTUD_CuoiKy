@@ -9,6 +9,8 @@ const Header = () => {
     window.location.reload();
   };
 
+  const isAdmin = user && user.role && user.role.name === 'admin';
+
   return (
     <header className="bg-blue-600 text-white p-4">
       <div className="container mx-auto flex justify-between items-center">
@@ -25,6 +27,16 @@ const Header = () => {
           <Link to="/cart" className="hover:underline">
             Cart
           </Link>
+          {isAdmin && (
+            <>
+              <Link to="/admin/products" className="hover:underline">
+                Admin Products
+              </Link>
+              <Link to="/admin/categories" className="hover:underline">
+                Admin Categories
+              </Link>
+            </>
+          )}
           {user ? (
             <>
               <span>Welcome, {user.username}</span>
